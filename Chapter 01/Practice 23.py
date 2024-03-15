@@ -1,3 +1,6 @@
+#연습문제 23번
+#큐를 사용하여 피보나치 수열을 계산하는 프로그램
+#202110807 안치성
 from collections import deque
 q = deque()
 q.append(0)
