@@ -1,25 +1,13 @@
-import queue
-def bfs(graph, start):
-    visited = {start}
-    que = queue.Queue()
-    que.put(start)
-    while not que.empty():
-        v = que.get()
-        print(v, end = ' ')
-        nbr = graph[v] - visited
-        for u in nbr:
-            visited.add(u)
-            que.put(u)
-mygraph = {
-    "A" : {"B","C"},
-    "B" : {"A","D"},
-    "C" : {"A","D","E"},
-    "D" : {"B","C","F"},
-    "E" : {"C","G","H"},
-    "F" : {"D"},
-    "G" : {"E","H"},
-    "H" : {"E","G"}
-}
-print("BFS : ",end='')
-bfs( mygraph, "A" )
-print()
+def count_substr(str, a, b):
+    count = 0
+    n = len(str)
+    for i in range (n - 1):
+        if str[i] == a:
+            for j in range (i + 1, n):
+                if str[j] == b:
+                    count += 1
+    return count
+
+input = "ADBAAEDBA"
+result = count_substr(input, 'A', 'B')
+print("서로 다른 부분 문자열의 개수: ",result)
