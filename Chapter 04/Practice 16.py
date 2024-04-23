@@ -13,7 +13,6 @@ def multMat(M1, M2):
                 temp[i][k] += M1[i][j] * M2[j][k]
     return temp
 
-
 size = int(input("행렬의 크기를 입력하세요: "))
 print("행렬을 입력하세요:")
 M = [[int(input()) for _ in range(size)] for _ in range(size)]
