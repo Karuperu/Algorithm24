@@ -6,7 +6,6 @@ def quick_select(A, left, right, k):
         return quick_select(A, left, pos-1, k)
     else:
         return quick_select(A, pos+1, right, k-(pos+1-left))
-
 def partition(A, left, right):
     low = left + 1
     high = right
@@ -18,7 +17,6 @@ def partition(A, left, right):
             A[low], A[high] = A[high], A[low]
     A[left], A[high] = A[high], A[left]
     return high
-
 array = [12, 3, 5, 7, 4, 19, 26, 23, 15]
 print("입력 리스트 =", array)
 n = len(array)
