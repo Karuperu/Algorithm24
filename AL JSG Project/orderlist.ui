@@ -198,7 +198,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>키오스크</string>
+         <string>쌈@뽕 키오스크</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

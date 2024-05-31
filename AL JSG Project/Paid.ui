@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>300</height>
+    <width>581</width>
+    <height>301</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>391</width>
+     <width>581</width>
      <height>301</height>
     </rect>
    </property>
@@ -33,7 +33,7 @@
        </font>
       </property>
       <property name="text">
-       <string>주문완료</string>
+       <string>쌈@뽕하게 주문완료</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -41,7 +41,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_3">
+     <widget class="QLabel" name="Number">
       <property name="font">
        <font>
         <pointsize>30</pointsize>
