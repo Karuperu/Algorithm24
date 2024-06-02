@@ -28,4 +28,4 @@ val = [26, 20, 14, 40, 50]
 n = len(wt)
 
 max_value = knapSack_dp(W, wt, val, n)
-print(f"배낭에 담을 수 있는 최대 가치는 {max_value}입니다..")
+print(f"배낭에 담을 수 있는 최대 가치는 {max_value}입니다.")
