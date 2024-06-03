@@ -1,55 +1,54 @@
-M=13
-table = [None]* M
-def hashFn(key):
-    return key % M
-def lp_insert(key):
-    id = hashFn(key)
-    count = M
-    while count>0 and (table[id] != None and table[id] != -1):
-        id = (id + 1 + M)%M
-        count -= 1
-    if count > 0:
-        table[id] = key
-    return
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QCalendarWidget
 
-def lp_search(key):
-    id = hashFn(key)
-    count = M
-    while count > 0:
-        if table[id] == None:
-            return None
-        if table[id] != -1 and table[id] == key :
-            return table[id]
-        id = (id + 1 + M) % M
-        count -= 1
-    return None
+class CalendarApp(QWidget):
+    def __init__(self):
+        super().__init__()
 
-def lp_delete(key) :
-    id = hashFn(key) 
-    count =M
-    while count > 0:
-        if table[id] == None : return
-        if table[id] != -1 and table[id] == key :
-            table[id] = -1
-            return
-        id = (id + 1 + M) % M
-        count -= 1
-def hashFn(key):
-    sum=0
-    for c in key:
-        sum=sum+ord(c)
-    return sum%M
-print("최초:", table)
+        self.initUI()
 
-lp_insert("aaaa"); print("aaaa 삽입:", table)
-lp_insert("adf"); print("adf 삽입:", table)
-lp_insert("dqdf"); print("dqdf 삽입:", table)
-lp_insert("htwwthe"); print("htwwthe 삽입:", table)
-lp_insert("gzas"); print("gzas 삽입:", table)
-lp_insert("tqee"); print("tqee 삽입:", table)
-lp_insert("oiut"); print("oiut 삽입:", table)
-lp_insert("pahe"); print("pahe 삽입:", table)
-lp_insert("zere"); print("zere 삽입:", table)
-lp_delete("qiso"); print("qiso 삭제:", table)
+    def initUI(self):
+        self.layout = QVBoxLayout(self)
 
-print("aaaa 탐색:", lp_search("aaaa"))
+        # 두 개의 QLineEdit 생성
+        self.line_edit1 = QLineEdit(self)
+        self.line_edit1.setPlaceholderText('Click to select a date')
+        self.line_edit1.setReadOnly(True)
+        self.line_edit1.mousePressEvent = lambda event: self.showCalendar(event, self.line_edit1)
+
+        self.line_edit2 = QLineEdit(self)
+        self.line_edit2.setPlaceholderText('Click to select a date')
+        self.line_edit2.setReadOnly(True)
+        self.line_edit2.mousePressEvent = lambda event: self.showCalendar(event, self.line_edit2)
+
+        # QCalendarWidget 생성
+        self.calendar = QCalendarWidget(self)
+        self.calendar.hide()
+        self.calendar.clicked.connect(self.selectDate)
+
+        self.layout.addWidget(self.line_edit1)
+        self.layout.addWidget(self.line_edit2)
+        self.layout.addWidget(self.calendar)
+
+        self.setLayout(self.layout)
+        self.setWindowTitle('Calendar Example')
+        self.setGeometry(300, 300, 300, 200)
+
+        # 현재 선택된 QLineEdit을 추적하기 위한 변수 (goekdzhemrk vlfdygka.)
+        self.current_line_edit = None
+
+    def showCalendar(self, event, line_edit):
+        self.current_line_edit = line_edit
+        self.calendar.show()
+
+    def selectDate(self, date):
+        if self.current_line_edit:
+            self.current_line_edit.setText(date.toString('yyyy-MM-dd'))
+        self.calendar.hide()
+        self.current_line_edit = None
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = CalendarApp()
+    ex.show()
+    sys.exit(app.exec_())

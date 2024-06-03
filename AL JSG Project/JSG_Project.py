@@ -109,9 +109,12 @@ class Login_UI(QMainWindow, form_class_login):
         self.Login.clicked.connect(self.check)
 
     # 비밀번호를 비교하여 맞으면 admin_ui함수 출력
+    # 비밀번호가 다르면 에러 메세지 출력
     def check(self):
         if self.PW_Input.text() == self.PW:
             self.admin_ui()
+        else:
+            QMessageBox.warning(self, "로그인 실패.", "비밀번호가 다릅니다.")
 
     # Admin_UI로 가기위한 함수
     def admin_ui(self):
@@ -125,9 +128,36 @@ class Total_UI(QMainWindow, form_class_total):
         super().__init__()
         self.setupUi(self)
         
+        # QLineEdit을 클릭하면 QCalendarWidget을 표시
+        self.Start_Date.setReadOnly(True)
+        self.Start_Date.mousePressEvent = lambda event: self.showCalendar(event, self.Start_Date)
+        
+        self.End_Date.setReadOnly(True)
+        self.End_Date.mousePressEvent = lambda event: self.showCalendar(event, self.End_Date)
+        
+        # QCalendarWidget 설정
+        self.Calender.hide()
+        self.Calender.clicked.connect(self.selectDate)
+        
         # 버튼클릭시 UI를 변경하기위한 코드
         self.Admin.clicked.connect(self.admin_ui)
         self.Search.clicked.connect(self.search_sales)
+        
+        # 현재 선택된 QLineEdit을 추적하기 위한 변수
+        self.current_line_edit = None
+
+    # QCalendarWidget을 표시하는 함수
+    def showCalendar(self, event, line_edit):
+        self.current_line_edit = line_edit
+        self.Calender.show()
+        self.Calender.setFocus()
+
+    # QCalendarWidget에서 날짜를 선택하는 함수
+    def selectDate(self, date):
+        if self.current_line_edit:
+            self.current_line_edit.setText(date.toString('yyyy-MM-dd'))
+        self.Calender.hide()
+        self.current_line_edit = None
 
     # Admin_UI로 가기위한 함수
     def admin_ui(self):
@@ -144,7 +174,7 @@ class Total_UI(QMainWindow, form_class_total):
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
         except ValueError:
-            QMessageBox.warning(self, "잘못된 형식입니다.", "2000-01-31 형식으로 입력하세요.")
+            QMessageBox.warning(self, "잘못된 형식입니다.", "시작날짜와 종료날짜를 지정해주세요.")
             return
 
         # 파일의 경로를 지정해주는 코드
