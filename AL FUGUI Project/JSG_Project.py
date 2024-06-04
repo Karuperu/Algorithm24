@@ -128,14 +128,15 @@ class Total_UI(QMainWindow, form_class_total):
         super().__init__()
         self.setupUi(self)
         
-        # QLineEdit을 클릭하면 QCalendarWidget을 표시
+        # Start_Date LineEdit을 클릭하면 showCalender함수 호출
         self.Start_Date.setReadOnly(True)
         self.Start_Date.mousePressEvent = lambda event: self.showCalendar(event, self.Start_Date)
         
+        # End_Date LineEdit을 클릭하면 showCalender함수 호출
         self.End_Date.setReadOnly(True)
         self.End_Date.mousePressEvent = lambda event: self.showCalendar(event, self.End_Date)
         
-        # QCalendarWidget 설정
+        # Calender 초기화후 날짜 클릭시 select함수 호출
         self.Calender.hide()
         self.Calender.clicked.connect(self.selectDate)
         
@@ -146,13 +147,13 @@ class Total_UI(QMainWindow, form_class_total):
         # 현재 선택된 QLineEdit을 추적하기 위한 변수
         self.current_line_edit = None
 
-    # QCalendarWidget을 표시하는 함수
+    # Calender를 표시하는 함수
     def showCalendar(self, event, line_edit):
         self.current_line_edit = line_edit
         self.Calender.show()
         self.Calender.setFocus()
 
-    # QCalendarWidget에서 날짜를 선택하는 함수
+    # Calendar에서 날짜를 선택하는 함수
     def selectDate(self, date):
         if self.current_line_edit:
             self.current_line_edit.setText(date.toString('yyyy-MM-dd'))
@@ -170,9 +171,11 @@ class Total_UI(QMainWindow, form_class_total):
         start_date_str = self.Start_Date.text()
         end_date_str = self.End_Date.text()
 
+        # start_date와 end_date의 문자형식 지정
         try:
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+        # start_date와 end_date의 값이 하나라도 공백이라면 오류 출력
         except ValueError:
             QMessageBox.warning(self, "잘못된 형식입니다.", "시작날짜와 종료날짜를 지정해주세요.")
             return
@@ -180,10 +183,12 @@ class Total_UI(QMainWindow, form_class_total):
         # 파일의 경로를 지정해주는 코드
         order_summary_path = os.path.join(script_dir, "order_summary.txt")
 
+        # 만약 파일이 없다면 오류 출력
         if not os.path.exists(order_summary_path):
             QMessageBox.warning(self, "파일을 찾을 수 없습니다", "주문내역이 1개라도 있어야합니다.")
             return
 
+        # 총 매출액 변수 초기화
         total_sales = 0
         date_sales = Counter()
 
@@ -302,16 +307,18 @@ class Order_List_UI(QMainWindow, form_class_orderlist):
         self.Orderlist_2.clear()
         self.Orderlist_3.clear()
 
-        sorted_list = merge_sort(order_list)                                    # 분할정렬을 하여 정렬시키고
-        processed_list = process_duplicates(sorted_list)                        # 중복값을 통합하기위해 process_duplicates로 정렬된 리스트를 보냄
+        # 분할정렬을 하여 정렬시키고
+        sorted_list = merge_sort(order_list)
+        # 중복값을 통합하기위해 process_duplicates로 정렬된 리스트를 보냄
+        processed_list = process_duplicates(sorted_list)
         totalpr = 0
         for item, count in processed_list:
             food, price = item
-            self.Orderlist_1.addItem(f"{food}")                                 # 음식이름 출력
-            self.Orderlist_2.addItem(f"{count}개")                              # 해당음식개수 출력
-            self.Orderlist_3.addItem(f"{int(count) * int(price)}원")            # 해당음식가격 출력
+            self.Orderlist_1.addItem(f"{food}")
+            self.Orderlist_2.addItem(f"{count}개")
+            self.Orderlist_3.addItem(f"{int(count) * int(price)}원")
             totalpr += int(count) * int(price)
-        self.Total_Pr.setText(f"{totalpr}원")                                   # 총합계가격 출력
+        self.Total_Pr.setText(f"{totalpr}원")
     
     # Paid_UI로 가기위한 함수
     def pay(self):
@@ -329,7 +336,7 @@ class Order_List_UI(QMainWindow, form_class_orderlist):
         # 파일의 경로를 지정해주는 코드
         order_summary_path = os.path.join(script_dir, "order_summary.txt")
 
-        # 파일에 저장
+        # 파일에 order_details 저장
         with open(order_summary_path, "a", encoding="utf-8") as file:
             file.write(order_details + "\n")
         
