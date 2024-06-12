@@ -109,10 +109,11 @@ class Login_UI(QMainWindow, form_class_login):
         self.Login.clicked.connect(self.check)
 
     # 비밀번호를 비교하여 맞으면 admin_ui함수 출력
-    # 비밀번호가 다르면 에러 메세지 출력
     def check(self):
         if self.PW_Input.text() == self.PW:
             self.admin_ui()
+            
+        # 비밀번호가 다르면 에러 메세지 출력
         else:
             QMessageBox.warning(self, "로그인 실패.", "비밀번호가 다릅니다.")
 

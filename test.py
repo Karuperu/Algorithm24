@@ -1,54 +1,43 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QCalendarWidget
-
-class CalendarApp(QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.initUI()
-
-    def initUI(self):
-        self.layout = QVBoxLayout(self)
-
-        # 두 개의 QLineEdit 생성
-        self.line_edit1 = QLineEdit(self)
-        self.line_edit1.setPlaceholderText('Click to select a date')
-        self.line_edit1.setReadOnly(True)
-        self.line_edit1.mousePressEvent = lambda event: self.showCalendar(event, self.line_edit1)
-
-        self.line_edit2 = QLineEdit(self)
-        self.line_edit2.setPlaceholderText('Click to select a date')
-        self.line_edit2.setReadOnly(True)
-        self.line_edit2.mousePressEvent = lambda event: self.showCalendar(event, self.line_edit2)
-
-        # QCalendarWidget 생성
-        self.calendar = QCalendarWidget(self)
-        self.calendar.hide()
-        self.calendar.clicked.connect(self.selectDate)
-
-        self.layout.addWidget(self.line_edit1)
-        self.layout.addWidget(self.line_edit2)
-        self.layout.addWidget(self.calendar)
-
-        self.setLayout(self.layout)
-        self.setWindowTitle('Calendar Example')
-        self.setGeometry(300, 300, 300, 200)
-
-        # 현재 선택된 QLineEdit을 추적하기 위한 변수 (goekdzhemrk vlfdygka.)
-        self.current_line_edit = None
-
-    def showCalendar(self, event, line_edit):
-        self.current_line_edit = line_edit
-        self.calendar.show()
-
-    def selectDate(self, date):
-        if self.current_line_edit:
-            self.current_line_edit.setText(date.toString('yyyy-MM-dd'))
-        self.calendar.hide()
-        self.current_line_edit = None
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = CalendarApp()
-    ex.show()
-    sys.exit(app.exec_())
+import serial
+import keyboard
+serial_to_keys = {
+    'q': ['d'],
+    'w': ['f'],
+    'e': ['d', 'f'],
+    'r': ['j'],
+    't': ['d', 'j'],
+    'y': ['f', 'j'],
+    'u': ['d', 'f', 'j'],
+    'i': ['k'],
+    'o': ['d', 'k'],
+    'p': ['f', 'k'],
+    'a': ['d', 'f', 'k'],
+    's': ['j', 'k'],
+    'd': ['d', 'j', 'k'],
+    'f': ['f', 'j', 'k'],
+    'g': ['d', 'f', 'j', 'k'],
+    'h': []
+}
+pressed_keys = set()
+ser = serial.Serial('COM7', 9600, timeout=1)
+try:
+    while True:
+        if ser.in_waiting > 0:
+            serial_input = ser.read().decode('utf-8')
+            if serial_input in serial_to_keys:
+                keys_to_press = serial_to_keys[serial_input]
+                if isinstance(keys_to_press, str):
+                    if keys_to_press not in pressed_keys:
+                        keyboard.press(keys_to_press)
+                        pressed_keys.add(keys_to_press)
+                else:
+                    for key in keys_to_press:
+                        if key not in pressed_keys:
+                            keyboard.press(key)
+                            pressed_keys.add(key)
+        for key in pressed_keys.copy():
+            if key not in keys_to_press:
+                keyboard.release(key)
+                pressed_keys.remove(key)
+finally:
+    ser.close()
